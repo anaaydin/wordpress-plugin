@@ -1,22 +1,35 @@
 <?php
 
 namespace Inc\Pages;
+use Inc\Api\SettingsApi;
 
 class Admin{
 
+    public $pages=[];
+    public $settings;
+    public function __construct()
+    {
+        $this->settings=new SettingsApi();
+        $this->pages=[
+            [
+                'page_title'=>'HK plugin',
+                'menu_title'=>'تنطیمات پلاگین من',
+                'capability'=>'manage_options',
+                'menu_slug'=>'hk_plugin',
+                'callable '=>function(){echo '<h1>Admin Page</h1>';},
+                'icon_url '=>'dashicons-sos',
+                'position '=>'110',
+
+            ]
+
+        ];
+    }
+
     function register() {
-        add_action( 'admin_menu', [ $this, 'add_admin_page' ] );
-    }
-
-    function add_admin_page() {
-        add_menu_page( 'HK plugin', 'تنطیمات پلاگین من',
-            'manage_options', 'hk_plugin',
-            array( $this, 'my_admin_plugin' ), 'dashicons-sos', 110 );
-    }
-
-    function my_admin_plugin() {
-        require_once PLUGIN_PATH . 'templates/admin.php';
+        $this->settings->add_pages($this->pages)->register();
 
     }
+
+
 
 }
